@@ -1,32 +1,41 @@
 <template>
   <div id="app">
     <stars id="stars" v-if="timeOfDay == 'night'" :count="20"></stars>
-    <div id="cycles">
-      <div class="btn" @click="changeTime('dawn')">Dawn</div>
-      <div class="btn" @click="changeTime('day')">Daytime</div>
-      <div class="btn" @click="changeTime('afternoon')">Afternoon</div>
-      <div class="btn" @click="changeTime('dusk')">Dusk</div>
-      <div class="btn" @click="changeTime('night')">Night</div>
-    </div>
-    <router-view/>
+    <b-container>
+      <header>
+        <header-nav></header-nav>
+      </header>
+      <div id="cycles">
+        <div class="btn" v-for="(time, i) in colors" :key="i" @click="changeTime(i)">{{i}}</div>
+      </div>
+      <router-view/>
+    </b-container>
   </div>
 </template>
 
 <script>
 import Velocity from 'velocity-animate';
 import 'velocity-animate/velocity.ui';
-
+import stars from './components/Stars.vue';
+import headerNav from './components/Header.vue';
 
 export default {
+  components: {
+    stars,
+    headerNav,
+  },
   data() {
     return {
       colors: {
-        day: [
+        dawn: [
+          '#AD4B0D 5%', '#B2A080 20%', '#182936 80%', '#010015 110%', // radial
+        ],
+        noon: [
           '#0259DF', '#c0d6ff', // linear
         ],
         afternoon: [
           // '#2E698B', '#D8C6B4 85%', '#C37E71', for linear
-          '#C37E71', '#D8C6B4 40%', '#2E698B', // radial
+          '#C37E71', '#D8C6B4 25%', '#2E698B', // radial
         ],
         dusk: [
           // '#182936', '#704D2D 90%', '#4F1F12', for linear
@@ -35,11 +44,8 @@ export default {
         night: [
           '#010015 10%', '#181F56', // linear
         ],
-        dawn: [
-          '#AD4B0D 5%', '#B2A080 20%', '#182936 80%', '#010015 110%', // radial
-        ],
       },
-      timeOfDay: '',
+      timeOfDay: String,
     };
   },
   methods: {
@@ -77,16 +83,16 @@ export default {
     },
   },
   mounted() {
-    this.timeOfDay = 'night';
+    this.timeOfDay = 'dusk';
     this.updateBackground();
   },
 };
 </script>
 
 <style lang="scss">
-@import url('https://fonts.googleapis.com/css?family=Roboto');
+@import url('https://fonts.googleapis.com/css?family=Rajdhani:300,500,700');
 html *{
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Rajdhani', sans-serif;
 }
 #app{
   width: 100%;
@@ -102,7 +108,7 @@ html *{
   display: flex;
   justify-content: space-between;
   width: 50%;
-  top: 10%;
+  bottom: 50px;
   left: 50%;
   transform: translate(-50%, -50%);
   position: absolute;
@@ -119,6 +125,26 @@ html *{
   cursor: pointer;
   &:hover{
     background-color: rgba(255, 255, 255, 0.1);
+    color: white;
   }
+}
+.form-control:focus{
+  border-color: #ffffff;
+  -webkit-box-shadow: none !important;
+  box-shadow: none !important;
+}
+/* Google maps autocomplete */
+.pac-container{
+  background-color: #ffffff33;
+}
+.pac-item{
+  cursor: pointer;
+  color: #ccc;
+  &:hover, &.pac-item-selected{
+    background-color: #ffffff22;
+  }
+}
+.pac-item-query{
+  color: white;
 }
 </style>
