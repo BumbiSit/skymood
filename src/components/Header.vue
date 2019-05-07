@@ -1,8 +1,10 @@
 <template>
     <div class="wrapper" :class="{shown: shown}">
-        <b-navbar variant="faded" type="dark">
-            <b-navbar-brand href="#">SkyMood</b-navbar-brand>
-            <b-nav-form @submit.prevent="()=>{return true}">
+        <b-row align-v="center" >
+            <b-col cols="12" sm="auto">
+                <center><h2>SkyMood</h2></center>
+            </b-col>
+            <b-col>
                 <b-input-group left="@">
                     <b-form-input
                         class="mr-sm-2 location-search"
@@ -11,25 +13,33 @@
                         id="location"
                     ></b-form-input>
                 </b-input-group>
-            </b-nav-form>
-        </b-navbar>
+            </b-col>
+            <b-col cols="1">
+                <router-link to="/" v-b-tooltip.hover title="My location">
+                    <v-icon name="regular/compass" scale="1.5"/>
+                </router-link>
+            </b-col>
+        </b-row>
     </div>
 </template>
 <script>
-
-
 export default {
+    props: ['time'],
     data() {
         return {
             shown: false,
             autocomplete: '',
             isAutocomleteVisible: false,
+            stamp: this.time,
         };
     },
     methods: {
         submit() {
             // document.getElementsByClassName('pac-item')[0].classList.add('pac-item-selected');
         },
+    },
+    updated() {
+        this.stamp = this.time;
     },
     mounted() {
         const performAnimation = () => {
@@ -48,9 +58,19 @@ export default {
         this.autocomplete.addListener('place_changed', () => {
             const place = this.autocomplete.getPlace();
             if (typeof place.geometry !== 'undefined') {
+                let city = String;
+                let country = String;
+                place.address_components.forEach((v) => {
+                    if (v.types.includes('locality')) city = v.long_name;
+                    if (v.types.includes('country')) country = v.long_name;
+                });
                 const lat = place.geometry.location.lat();
                 const lon = place.geometry.location.lng();
-                console.log(`Coordinates ${lat}, ${lon}`);
+                this.$emit('choseCity', {
+                    lat,
+                    lon,
+                    address: `${city}, ${country}`,
+                });
             }
         });
 
@@ -73,7 +93,7 @@ export default {
                 });
             };
             new MutationObserver(callback).observe(targetNode, config);
-        }, 300);
+        }, 500);
     },
 };
 </script>
@@ -84,7 +104,7 @@ export default {
     transition: all 0.7s cubic-bezier(.17, .67, .3, 1);
     &.shown{
         opacity: 1;
-        transform: translateY(0);
+        transform: translateY(10px);
     }
 }
 .navbar-dark .navbar-brand{

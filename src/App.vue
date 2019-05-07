@@ -3,12 +3,12 @@
     <stars id="stars" v-if="timeOfDay == 'night'" :count="20"></stars>
     <b-container>
       <header>
-        <header-nav></header-nav>
+        <header-nav @choseCity="reloadForecast" :time="time"></header-nav>
       </header>
-      <div id="cycles">
+      <!--<div id="cycles">
         <div class="btn" v-for="(time, i) in colors" :key="i" @click="changeTime(i)">{{i}}</div>
-      </div>
-      <router-view/>
+      </div>-->
+      <router-view @updateBackground="changeTime"></router-view>
     </b-container>
   </div>
 </template>
@@ -19,6 +19,7 @@ import 'velocity-animate/velocity.ui';
 import stars from './components/Stars.vue';
 import headerNav from './components/Header.vue';
 
+
 export default {
   components: {
     stars,
@@ -26,32 +27,37 @@ export default {
   },
   data() {
     return {
+      AppTitle: String,
       colors: {
         dawn: [
           '#AD4B0D 5%', '#B2A080 20%', '#182936 80%', '#010015 110%', // radial
         ],
         noon: [
-          '#0259DF', '#c0d6ff', // linear
+          '#bdd4ff', '#1c64d2 90%', // radial
         ],
         afternoon: [
-          // '#2E698B', '#D8C6B4 85%', '#C37E71', for linear
           '#C37E71', '#D8C6B4 25%', '#2E698B', // radial
         ],
         dusk: [
-          // '#182936', '#704D2D 90%', '#4F1F12', for linear
           '#4F1F12', '#704D2D 20%', '#182936', // radial
         ],
         night: [
-          '#010015 10%', '#181F56', // linear
+          '#121844', '#010015 90%', // radial
         ],
       },
       timeOfDay: String,
+      time: 0,
+      timezone: String,
     };
   },
   methods: {
-    changeTime(time) {
-      this.timeOfDay = time;
-      this.updateBackground();
+    changeTime(time, timezone) {
+      this.time = time;
+      this.timezone = timezone;
+      if(this.timeOfDay != this.getPhaseOfDay) {
+        this.timeOfDay = this.getPhaseOfDay;
+        this.updateBackground();
+      }    
     },
     updateBackground() {
       const el = document.querySelector('#app');
@@ -60,19 +66,11 @@ export default {
         colors: this.colors[this.timeOfDay],
       };
       let gradient;
-      if (time.name !== 'dawn' && time.name !== 'afternoon' && time.name !== 'dusk') {
-        gradient = 'linear-gradient(to bottom,';
-        time.colors.forEach((element, index) => {
-          gradient = `${gradient} ${element}${index === time.colors.length - 1 ? '' : ','}`;
-        });
-        gradient = `${gradient})`;
-      } else {
-        gradient = 'radial-gradient(ellipse 250% 100% at 50% 110%,';
-        time.colors.forEach((element, index) => {
-          gradient = `${gradient} ${element}${index === time.colors.length - 1 ? '' : ','}`;
-        });
-        gradient = `${gradient})`;
-      }
+      gradient = 'radial-gradient(ellipse 250% 100% at 50% 110%,';
+      time.colors.forEach((element, index) => {
+        gradient = `${gradient} ${element}${index === time.colors.length - 1 ? '' : ','}`;
+      });
+      gradient = `${gradient})`;
       el.style.backgroundImage = gradient;
       el.style.backgroundSize = '100% 500%';
       Velocity(el, 'stop');
@@ -81,10 +79,34 @@ export default {
         easing: [0.3, 0.5, 0.43, 1.01],
       });
     },
+    reloadForecast(val) {
+      console.log(val);
+      this.$router.push(`/${encodeURI(val.address)}/${val.lat},${val.lon}`);
+    },
+  },
+  computed: {
+    getPhaseOfDay() {
+      const d = (
+        this.timezone
+        ? this.$moment(this.time * 1000).tz(this.timezone)
+        : this.$moment(this.time * 1000)
+      );
+      let result = String;
+      if (d.hours() >= 5) result = 'dawn';
+      if (d.hours() >= 8) result = 'noon';
+      if (d.hours() >= 17) result = 'afternoon';
+      if (d.hours() >= 19) result = 'dusk';
+      if (d.hours() >= 21 || d.hours() < 5) result = 'night';
+      return result;
+    },
+  },
+  watch: {
+    $route(to) {
+      document.title = `${this.AppTitle} |  ${to.params.address}`;
+    },
   },
   mounted() {
-    this.timeOfDay = 'dusk';
-    this.updateBackground();
+    this.AppTitle = document.title;
   },
 };
 </script>
@@ -93,6 +115,9 @@ export default {
 @import url('https://fonts.googleapis.com/css?family=Rajdhani:300,500,700');
 html *{
   font-family: 'Rajdhani', sans-serif;
+}
+header {
+  margin-bottom: 30px;
 }
 #app{
   width: 100%;
