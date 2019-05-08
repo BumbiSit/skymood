@@ -1,8 +1,8 @@
 <template>
     <div class="wrapper" :class="{shown: shown}">
-        <b-row align-v="center" >
-            <b-col cols="12" sm="auto">
-                <center><h2>SkyMood</h2></center>
+        <b-row align-v="center" no-gutters>
+            <b-col cols="12" sm="auto" class="text-center">
+                <h2>SkyMood</h2>
             </b-col>
             <b-col>
                 <b-input-group left="@">
@@ -18,6 +18,7 @@
                 <router-link to="/" v-b-tooltip.hover title="My location">
                     <v-icon name="regular/compass" scale="1.5"/>
                 </router-link>
+                <span class="switch-measurements" v-b-tooltip.hover title="Change measurement" @click="$store.commit('changeMeasurement', !$store.state.isMetric)">{{!$store.state.isMetric ? '°C' : '°F'}}</span>
             </b-col>
         </b-row>
     </div>
@@ -117,6 +118,8 @@ export default {
     background-color: #ffffff33;
     color: white;
     font-weight: 500;
+    margin-left: 20px;
+    margin-right: 20px !important;
     &::placeholder{
         color: white;
     }
@@ -132,5 +135,10 @@ export default {
         width: 90%;
     }
 }
-
+.switch-measurements {
+    display: inline-block;
+    padding-left: 10px;
+    font-size: 20px;
+    cursor: pointer;
+}
 </style>

@@ -22,9 +22,15 @@
           </b-col>
           <b-col class="small-info">
             <p>Feels like: {{getTemperatureFeels}}</p>
-            <p>Humidity: {{humidity*100}}%</p>
+            <p>Humidity: {{Math.round(humidity*100)}}%</p>
             <p>UV index: {{uvIndex}}</p>
             <p>Visibility: {{getVisibility}}</p>
+          </b-col>
+          <b-col align-self="center">
+            <b-row>
+              <b-col cols="12" sm="auto"><v-icon name="location-arrow" scale="2" class="wind-pointer"/></b-col>
+              <b-col><h3>{{getWindSpeed}}</h3></b-col>
+            </b-row>
           </b-col>
         </b-row>
       </b-col>
@@ -38,12 +44,13 @@
         <b-row class="justify-content-md-center" style="width:100%;">
           <p v-if="this.currentLat === null">Finding your city...</p>
         </b-row>
-        
     </b-row>
   </div>
 </template>
 
 <script>
+import Velocity from 'velocity-animate';
+import 'velocity-animate/velocity.ui';
 import { SemipolarSpinner } from 'epic-spinners';
 import WeatherIcon from '../helpers/WeatherIcon.vue';
 
@@ -68,8 +75,9 @@ export default {
       humidity: null,
       uvIndex: null,
       visibility: null,
+      windDirection: null,
+      windSpeed: null,
       icon: '',
-      isMetric: true,
       timeSeparator: true,
     };
   },
@@ -90,8 +98,18 @@ export default {
           this.humidity = current.humidity;
           this.uvIndex = current.uvIndex;
           this.visibility = current.visibility;
+          this.windDirection = current.windBearing;
+          this.windSpeed = current.windSpeed;
           this.icon = current.icon;
-
+          
+          Velocity(document.querySelector('.wind-pointer'), 
+          {
+            rotateZ: `${(this.windDirection-45)}deg`,
+          }, 
+          {
+            duration: 1500,
+            easing: [0.3, 0.5, 0.43, 1.01],
+          });
           if (this.$route.params.coords !== undefined) {
             this.city = this.$route.params.address;
           } else {
@@ -111,15 +129,19 @@ export default {
   computed: {
     getTemperature() {
       // Fahrenheit or celsius
-      return (this.isMetric ? Math.floor(((this.temperature - 32) * 5 / 9))+'°C' : Math.floor(this.temperature)+'°F');
+      return (this.$store.state.isMetric ? Math.floor(((this.temperature - 32) * 5 / 9)) + '°C' : Math.floor(this.temperature) + '°F');
     },
     getTemperatureFeels() {
       // Fahrenheit or celsius
-      return (this.isMetric ? Math.floor(((this.temperatureFeels - 32) * 5 / 9))+'°C' : Math.floor(this.temperatureFeels)+'°F');
+      return (this.$store.state.isMetric ? Math.floor(((this.temperatureFeels - 32) * 5 / 9)) + '°C' : Math.floor(this.temperatureFeels) + '°F');
     },
     getVisibility() {
       // Miles or kilometers
-      return (this.isMetric ? Math.floor(this.visibility)+' kmh' : Math.floor((this.visibility/1.609))+' mph');
+      return (this.$store.state.isMetric ? `${Math.floor(this.visibility * 1.609)} km` : `${Math.floor(this.visibility)} mi`);
+    },
+    getWindSpeed() {
+      // Miles or kilomteters
+      return (this.$store.state.isMetric ? `${Math.floor(this.windSpeed * 1.609)} kmh` : `${Math.floor(this.windSpeed)} mph`);
     },
   },
   watch: {
@@ -202,8 +224,10 @@ export default {
     // Switch between metric and imperial with F or C keypress
     const self = this;
     document.addEventListener('keyup', (e) => {
-      if (e.key === 'c') self.isMetric = true;
-      else if (e. key === 'f') self.isMetric = false;
+      if (e.target.tagName !== 'INPUT') {
+        if (e.key === 'c') self.$store.commit('changeMeasurement', true);
+        else if (e.key === 'f') self.$store.commit('changeMeasurement', false);
+      }
     });
   },
 };

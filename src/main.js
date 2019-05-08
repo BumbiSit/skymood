@@ -1,4 +1,5 @@
 import Vue from 'vue';
+import Vuex from 'vuex';
 
 // Bootstrap
 import BootstrapVue from 'bootstrap-vue';
@@ -23,16 +24,27 @@ import router from './router';
 window.axios = axios;
 axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
-
+Vue.use(Vuex);
 Vue.use(BootstrapVue);
 Vue.use(VueMoment, {
   moment,
 });
 Vue.component('v-icon', Icon);
 
-Vue.config.productionTip = false;
+// Initialize Vuex
+const store = new Vuex.Store({
+  state: {
+    isMetric: true,
+  },
+  mutations: {
+    changeMeasurement(state, to) {
+      state.isMetric = to;
+    },
+  },
+});
 
 new Vue({
   router,
+  store,
   render(h) { return h(App); },
 }).$mount('#app');

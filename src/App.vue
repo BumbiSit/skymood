@@ -96,7 +96,7 @@ export default {
       if (d.hours() >= 8) result = 'noon';
       if (d.hours() >= 17) result = 'afternoon';
       if (d.hours() >= 19) result = 'dusk';
-      if (d.hours() >= 21 || d.hours() < 5) result = 'night';
+      if (d.hours() >= 22 || d.hours() < 5) result = 'night';
       return result;
     },
   },
