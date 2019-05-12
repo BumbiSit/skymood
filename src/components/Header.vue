@@ -3,6 +3,12 @@
         <b-row align-v="center" no-gutters>
             <b-col cols="12" sm="auto" class="text-center">
                 <h2>SkyMood</h2>
+                <div class="side-tools d-block d-sm-none">
+                    <router-link to="/" v-b-tooltip.hover title="My location">
+                        <v-icon name="regular/compass" scale="1.5"/>
+                    </router-link>
+                    <span class="switch-measurements" v-b-tooltip.hover title="Change measurement" @click="$store.commit('changeMeasurement', !$store.state.isMetric)">{{!$store.state.isMetric ? '°C' : '°F'}}</span>
+                </div>
             </b-col>
             <b-col>
                 <b-input-group left="@">
@@ -14,7 +20,7 @@
                     ></b-form-input>
                 </b-input-group>
             </b-col>
-            <b-col cols="1">
+            <b-col cols="1" class="d-none d-sm-block">
                 <router-link to="/" v-b-tooltip.hover title="My location">
                     <v-icon name="regular/compass" scale="1.5"/>
                 </router-link>
@@ -111,6 +117,11 @@ export default {
 .navbar-dark .navbar-brand{
     font-size: 2em;
     font-weight: 300;
+}
+.side-tools{
+    position: absolute;
+    right: 20px;
+    top: 0;
 }
 .location-search{
     border-radius: 20px;

@@ -11,7 +11,7 @@ export default {
             console.log(this.icon);
             switch (this.icon) {
                 case 'clear-day':
-                    return require('../assets/icons/rainy-6.svg');
+                    return require('../assets/icons/day.svg');
                 case 'clear-night':
                     return require('../assets/icons/night.svg');
                 case 'cloudy':
@@ -22,6 +22,8 @@ export default {
                     return require('../assets/icons/cloudy-night-1.svg');
                 case 'rain':
                     return require('../assets/icons/rainy-5.svg');
+                case 'wind':
+                    return require('../assets/icons/rainy-6.svg');
                 default:
                     return require('../assets/icons/day.svg');
             }

@@ -26,7 +26,6 @@
 @keyframes windy {
   0% {
     transform: rotate(0deg);
-    margin-left: 0;
   }
 
   10% {
@@ -43,7 +42,6 @@
     }
   50% {
     transform: rotate(-5deg);
-    margin-left: -5px;
   }
   70% {
     transform: rotate(3deg);
@@ -53,7 +51,6 @@
   }
    100% {
     transform: rotate(0deg);
-    margin-left: 0px;
     }
 }
 
@@ -81,14 +78,14 @@
      -moz-animation-name: windy;
       -ms-animation-name: windy;
           animation-name: windy;
-  -webkit-animation-delay: 0.25s;
-     -moz-animation-delay: 0.25s;
-      -ms-animation-delay: 0.25s;
-          animation-delay: 0.25s;
-  -webkit-animation-duration: 8s;
-     -moz-animation-duration: 8s;
-      -ms-animation-duration: 8s;
-          animation-duration: 8s;
+  -webkit-animation-delay: 0.1s;
+     -moz-animation-delay: 0.1s;
+      -ms-animation-delay: 0.1s;
+          animation-delay: 0.1s;
+  -webkit-animation-duration: 5s;
+     -moz-animation-duration: 5s;
+      -ms-animation-duration: 5s;
+          animation-duration: 5s;
   -webkit-animation-timing-function: linear;
      -moz-animation-timing-function: linear;
       -ms-animation-timing-function: linear;
@@ -102,13 +99,13 @@
     </defs>
     <g filter="url(#blur)" id="rainy-6">
         <g transform="translate(32,32), rotate(90)">
-            <line class="am-weather-rain" fill="none" stroke="#91C0F8" stroke-linecap="round" stroke-width="1" x1="-12" x2="-12" y1="-12" y2="24" />
-            <line class="am-weather-rain" fill="none" stroke="#91C0F8" stroke-linecap="round" stroke-width="1" x1="-8" x2="-8" y1="-9" y2="21" />
-            <line class="am-weather-rain" fill="none" stroke="#91C0F8" stroke-linecap="round" stroke-width="1" x1="-4" x2="-4" y1="-6" y2="18" />
-            <line class="am-weather-rain" fill="none" stroke="#91C0F8" stroke-linecap="round" stroke-width="1" x1="0" x2="0" y1="-3" y2="15" />
-            <line class="am-weather-rain" fill="none" stroke="#91C0F8" stroke-linecap="round" stroke-width="1" x1="4" x2="4" y1="0" y2="12" />
-            <line class="am-weather-rain" fill="none" stroke="#91C0F8" stroke-linecap="round" stroke-width="1" x1="8" x2="8" y1="3" y2="9" />
-            <line class="am-weather-rain" fill="none" stroke="#91C0F8" stroke-linecap="round" stroke-width="1" x1="12" x2="12" y1="6" y2="6" />
+            <line class="am-weather-rain" fill="none" stroke="#FFF" stroke-linecap="round" stroke-width="1" x1="-12" x2="-12" y1="-12" y2="24" />
+            <line class="am-weather-rain-2" fill="none" stroke="#FFF" stroke-linecap="round" stroke-width="1" x1="-8" x2="-8" y1="-9" y2="21" />
+            <line class="am-weather-rain" fill="none" stroke="#FFF" stroke-linecap="round" stroke-width="1" x1="-4" x2="-4" y1="-6" y2="18" />
+            <line class="am-weather-rain-2" fill="none" stroke="#FFF" stroke-linecap="round" stroke-width="1" x1="0" x2="0" y1="-3" y2="15" />
+            <line class="am-weather-rain" fill="none" stroke="#FFF" stroke-linecap="round" stroke-width="1" x1="4" x2="4" y1="0" y2="12" />
+            <line class="am-weather-rain-2" fill="none" stroke="#FFF" stroke-linecap="round" stroke-width="1" x1="8" x2="8" y1="3" y2="9" />
+            <line class="am-weather-rain" fill="none" stroke="#FFF" stroke-linecap="round" stroke-width="1" x1="12" x2="12" y1="6" y2="6" />
         </g>
     </g>
 </svg>

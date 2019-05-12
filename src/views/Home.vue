@@ -24,7 +24,7 @@
             <p>Feels like: {{getTemperatureFeels}}</p>
             <p>Humidity: {{Math.round(humidity*100)}}%</p>
             <p>UV index: {{uvIndex}}</p>
-            <p>Visibility: {{getVisibility}}</p>
+            <p>Chance of rain: {{Math.round(precip*100)}}%</p>
           </b-col>
           <b-col align-self="center">
             <b-row>
@@ -35,7 +35,7 @@
         </b-row>
       </b-col>
     </b-row>
-    <b-row id="loader" class="justify-content-md-center" :class="{loading}">
+    <div id="loader" class="d-flex justify-content-between" :class="{loading}">
         <semipolar-spinner
           :animation-duration="2000"
           :size="100"
@@ -44,7 +44,7 @@
         <b-row class="justify-content-md-center" style="width:100%;">
           <p v-if="this.currentLat === null">Finding your city...</p>
         </b-row>
-    </b-row>
+    </div>
   </div>
 </template>
 
@@ -53,12 +53,14 @@ import Velocity from 'velocity-animate';
 import 'velocity-animate/velocity.ui';
 import { SemipolarSpinner } from 'epic-spinners';
 import WeatherIcon from '../helpers/WeatherIcon.vue';
+import Chart from '../components/Chart.vue';
 
 export default {
   name: 'home',
   components: {
     SemipolarSpinner,
     WeatherIcon,
+    Chart,
   },
   data() {
     return {
@@ -75,16 +77,41 @@ export default {
       humidity: null,
       uvIndex: null,
       visibility: null,
+      precip: null,
       windDirection: null,
       windSpeed: null,
       icon: '',
       timeSeparator: true,
+      hourlyForecast: {
+        labels: ['03:00', '06:00', '09:00', '12:00', '15:00', '18:00', '21:00', '0:00',],
+        datasets: [{
+            label: 'Temperature',
+            data: [12, 19, 3, 5, 2, 3],
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)'
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+            ],
+            borderWidth: 1
+        }]
+      },
     };
   },
   methods: {
     loadForecast(coords) {
       this.loading = true;
-      axios.get(`http://localhost:3001/api/forecast?lat=${coords.latitude}&long=${coords.longitude}`)
+      axios.get(`https://api.skymood.ml/api/forecast?lat=${coords.latitude}&long=${coords.longitude}`)
         .then((response) => {
           console.log(response);
           const current = response.data.currently;
@@ -101,6 +128,7 @@ export default {
           this.windDirection = current.windBearing;
           this.windSpeed = current.windSpeed;
           this.icon = current.icon;
+          this.precip = current.precipProbability;
           
           Velocity(document.querySelector('.wind-pointer'), 
           {
@@ -143,6 +171,9 @@ export default {
       // Miles or kilomteters
       return (this.$store.state.isMetric ? `${Math.floor(this.windSpeed * 1.609)} kmh` : `${Math.floor(this.windSpeed)} mph`);
     },
+    getRandomInt () {
+      return Math.floor(Math.random() * (50 - 5 + 1)) + 5
+    }
   },
   watch: {
     $route(to) {
@@ -257,13 +288,16 @@ export default {
   }
 }
 #loader {
-   transform: translateY(-  200px);
+   transform: translate(-50%, -40%);
+   left: 50%;
+   top: 50%;
    opacity: 0;
+   position: absolute;
    display: none;
    transition: all 0.5s ease-in-out;
    &.loading {
      display: flex;
-     transform: translateY(0);
+     transform: translate(-50%, -50%);
      opacity: 1;
    }
 }
@@ -278,5 +312,8 @@ export default {
 .temperature {
   font-size: 80px;
   margin-bottom: -15px;
+}
+.hourly-forecast {
+  height: 300px;
 }
 </style>
