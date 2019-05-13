@@ -40,10 +40,8 @@
           :animation-duration="2000"
           :size="100"
           :color="'#fff'"
+          :class="{locating: currentLat === null}"
         />
-        <b-row class="justify-content-md-center" style="width:100%;">
-          <p v-if="this.currentLat === null">Finding your city...</p>
-        </b-row>
     </div>
   </div>
 </template>
@@ -299,6 +297,15 @@ export default {
      display: flex;
      transform: translate(-50%, -50%);
      opacity: 1;
+   }
+   .semipolar-spinner {
+      &.locating:after{
+        content: "Locating...";
+        position: absolute;
+        bottom: -20px;
+        text-align: center;
+        width: 100%;
+      }
    }
 }
 .current-info {
