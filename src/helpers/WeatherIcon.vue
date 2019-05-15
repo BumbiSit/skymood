@@ -8,7 +8,6 @@ export default {
     props: ['icon'],
     computed: {
         getIcon() {
-            console.log(this.icon);
             switch (this.icon) {
                 case 'clear-day':
                     return require('../assets/icons/day.svg');

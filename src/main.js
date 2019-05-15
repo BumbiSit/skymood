@@ -18,6 +18,9 @@ import VueMoment from 'vue-moment';
 import moment from 'moment-timezone';
 
 //
+import Bars from 'vuebars';
+
+//
 import App from './App.vue';
 import router from './router';
 
@@ -29,6 +32,8 @@ Vue.use(BootstrapVue);
 Vue.use(VueMoment, {
   moment,
 });
+
+Vue.use(Bars);
 Vue.component('v-icon', Icon);
 
 // Initialize Vuex
