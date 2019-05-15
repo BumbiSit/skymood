@@ -113,7 +113,7 @@ export default {
 
           // Slider marks
           response.data.hourly.data
-          .filter((val, i) => (i % 2 === 0 && i < 24))
+          .filter((val, i) => (i <= 24))
           .map((val, i) => {
             if(i === 0) {
               this.selectedHour = this.time;
@@ -134,11 +134,19 @@ export default {
             };
           }, this);
 
-          this.sliderMarks = val => val !== this.upcomingHours[0] ? ({
-            label: this.$moment(val*1000).tz(this.timezone).format('HH:mm'),
-          }) : ({
-            label: `Now`,
-          });
+          let i = 0;
+          this.sliderMarks = (val) => {
+            if(val !== this.upcomingHours[0]){
+              i += 1;
+              return {
+                label: (i % 2 === 0 ? this.$moment(val*1000).tz(this.timezone).format('HH:mm') : ''),
+              };      
+            } else {
+              return {
+                label: 'Now',
+              };
+            }
+          };
 
           if (this.$route.params.coords !== undefined) {
             this.city = this.$route.params.address;
@@ -323,6 +331,12 @@ export default {
 }
 .vue-slider-process {
   background-color: white;
+}
+.vue-slider-rail {
+  background-color: #cccccc66;
+}
+.vue-slider-mark-step {
+  background-color: rgba(255, 255, 255, 0.5);
 }
 .wind-pointer {
   transition: transform 0.5s ease-in-out;
