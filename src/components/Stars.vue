@@ -30,7 +30,7 @@ export default {
   height: 100%;
   top: 0;
   opacity: 0;
-  transition: all 2s ease-in-out;
+  transition: all 1s ease-in-out;
   &.on{
     top: -50%;
     opacity: 1;

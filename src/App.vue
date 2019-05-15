@@ -75,7 +75,7 @@ export default {
       el.style.backgroundSize = '100% 500%';
       Velocity(el, 'stop');
       Velocity(el, { backgroundSize: ['100% 100%', '100% 500%'] }, {
-        duration: 2000,
+        duration: 1000,
         easing: [0.3, 0.5, 0.43, 1.01],
       });
     },
