@@ -2,7 +2,7 @@
   <div class="home">
     <b-row :class="{loading}" align-v="center">
       <b-col sm="6" xs="12">
-        <weather-icon :icon="hourlyForecast[selectedHour].icon"/>
+        <weather-icon :icon="hourlyForecast[selectedHour].icon" />
       </b-col>
       <b-col xs="12">
         <b-row>
@@ -33,7 +33,7 @@
             </b-row>
           </b-col>
         </b-row>
-        <b-row>
+        <b-row class="hourly-wrapper">
           <h5>Hourly forecast</h5>
           <vue-slider v-model="selectedHour" :width="'100%'" :marks="sliderMarks" :data="upcomingHours" :tooltip="'none'" @change="hourlyChanged"></vue-slider>
         </b-row>
@@ -74,19 +74,23 @@ export default {
       city: '',
       time: '',
       timezone: '',
-      summary: '',
-      temperature: null,
-      temperatureFeels: null,
-      humidity: null,
-      uvIndex: null,
-      visibility: null,
-      precip: null,
-      windDirection: null,
-      windSpeed: null,
-      icon: '',
       timeSeparator: true,
       selectedHour: 0,
-      hourlyForecast: [],
+      hourlyForecast: {
+        0: {
+          time: null,
+          summary: null,
+          temperature: null,
+          temperatureFeels: null,
+          humidity: null,
+          uvIndex: null,
+          visibility: null,
+          windDirection: null,
+          windSpeed: null,
+          icon: '',
+          precip: null,
+        }
+      },
       sliderMarks: null,
       upcomingHours: [],
     };
@@ -109,7 +113,7 @@ export default {
 
           // Slider marks
           response.data.hourly.data
-          .filter((val, i) => (i % 3 === 0 && i < 24))
+          .filter((val, i) => (i % 2 === 0 && i < 24))
           .map((val, i) => {
             if(i === 0) {
               this.selectedHour = this.time;
@@ -135,17 +139,6 @@ export default {
           }) : ({
             label: `Now`,
           });
-
-          
-
-          /*Velocity(document.querySelector('.wind-pointer'), 
-          {
-            rotateZ: `${(this.windDirection-45)}deg`,
-          }, 
-          {
-            duration: 1500,
-            easing: [0.3, 0.5, 0.43, 1.01],
-          });*/
 
           if (this.$route.params.coords !== undefined) {
             this.city = this.$route.params.address;
@@ -333,5 +326,9 @@ export default {
 }
 .wind-pointer {
   transition: transform 0.5s ease-in-out;
+}
+.hourly-wrapper {
+  padding-left: 20px;
+  padding-right: 20px;
 }
 </style>
