@@ -140,6 +140,13 @@ export default {
               i += 1;
               return {
                 label: (i % 2 === 0 ? this.$moment(val*1000).tz(this.timezone).format('HH:mm') : ''),
+                labelStyle: {
+                  color: '#ddd',
+                },
+                labelActiveStyle: {
+                  color: 'white',  
+                  transform: 'translateX(-50%) scale(1.15)',
+                },
               };      
             } else {
               return {
@@ -337,6 +344,9 @@ export default {
 }
 .vue-slider-mark-step {
   background-color: rgba(255, 255, 255, 0.5);
+}
+.vue-slider-mark-label {
+  transition: all 0.3s;
 }
 .wind-pointer {
   transition: transform 0.5s ease-in-out;

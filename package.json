@@ -18,6 +18,7 @@
     "i": "^0.3.6",
     "moment-timezone": "^0.5.25",
     "npm": "^6.9.0",
+    "redis": "^2.8.0",
     "velocity-animate": "^1.5.2",
     "vue": "^2.6.10",
     "vue-awesome": "^3.5.1",
