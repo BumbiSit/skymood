@@ -22,25 +22,27 @@ var url_prefix = 'https://api.darksky.net/forecast/'+DARKSKY_SECRET_KEY+'/';
 
 // 
 app.get('/forecast', function(req, res) {
-  try {
-    // Retrieves location coordinates (latitude and longitude) from client request query
-    const coordinates = req.query.lat+','+req.query.long;
-    const url = url_prefix + coordinates;
-    console.log('Fetching '+url);
-    
-    axios.get(url)
-        .then((response) => {
-            console.log("Got response status "+response.status)
-            res.status(200).json(response.data);
-        })
-        .catch((error) => {
-            console.log('Errors '+error);
-        });
-    
-  } catch(err) {
-    console.log("Errors occurs requesting Dark Sky API", err);
-    res.status(500).json({'message': 'Errors occurs requesting Dark Sky API', 'details' : err});
-  }
+  // Retrieves location coordinates (latitude and longitude) from client request query
+  const coordinates = req.query.lat+','+req.query.long;
+  const url = url_prefix + coordinates;
+
+  // Look for cache if coords have been requested in last 15 mins
+  cache.get('forecasts/'+coordinates, (err, result) => {
+      console.log("Got cached result for "+coordinates)
+      res.status(200).json(JSON.parse(result)); // return the cached result
+      return true;
+  });
+  console.log('Fetching '+url);
+  
+  axios.get(url)
+      .then((response) => {
+          console.log("Got response status "+response.status)
+          res.status(200).json(response.data);
+          cache.setex("forecasts/"+coordinates, config.cache_time, JSON.stringify(response.data)); // save cache for 15 mins.
+      })
+      .catch((error) => {
+          console.log('Errors '+error);
+      });
 });
 
 // Start the server
