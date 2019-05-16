@@ -98,7 +98,7 @@ export default {
   methods: {
     loadForecast(coords) {
       this.loading = true;
-      axios.get(`https://api.skymood.ml/api/forecast?lat=${coords.latitude}&long=${coords.longitude}`)
+      axios.get(`https://api.skymood.ml/forecast?lat=${coords.latitude}&long=${coords.longitude}`)
         .then((response) => {
           console.log(response);
           const current = response.data.currently;
