@@ -16,33 +16,50 @@ app.use(cors());
 // Following is an example to proxy client request to DarkSky forecast API
 const DARKSKY_SECRET_KEY = config.weather_api_secret; 
 
-var url_prefix = 'https://api.darksky.net/forecast/'+DARKSKY_SECRET_KEY+'/';
+const url_prefix = 'https://api.darksky.net/forecast/'+DARKSKY_SECRET_KEY+'/';
 
-
+let getCache = (key) => {
+    return new Promise((resolve, reject) => {
+        cache.get(key, (err, result) => {
+            if(err) {
+                reject('Cache error: '+err);
+            }
+            if(result) {
+                console.log("Got cached result for "+key)
+                resolve(JSON.parse(result)); // return the cached result
+            } else {
+                resolve(false);
+            }
+        });
+    });
+}
 
 // 
-app.get('/forecast', function(req, res) {
-  // Retrieves location coordinates (latitude and longitude) from client request query
-  const coordinates = req.query.lat+','+req.query.long;
-  const url = url_prefix + coordinates;
+app.get('/forecast', (req, res) => {
+    // Retrieves location coordinates (latitude and longitude) from client request query
+    const coordinates = req.query.lat+','+req.query.long;
+    const url = url_prefix + coordinates;
 
-  // Look for cache if coords have been requested in last 15 mins
-  cache.get('forecasts/'+coordinates, (err, result) => {
-      console.log("Got cached result for "+coordinates)
-      res.status(200).json(JSON.parse(result)); // return the cached result
-      return true;
-  });
-  console.log('Fetching '+url);
-  
-  axios.get(url)
-      .then((response) => {
-          console.log("Got response status "+response.status)
-          res.status(200).json(response.data);
-          cache.setex("forecasts/"+coordinates, config.cache_time, JSON.stringify(response.data)); // save cache for 15 mins.
-      })
-      .catch((error) => {
-          console.log('Errors '+error);
-      });
+    getCache('forecasts/'+coordinates)
+        .then((val) => {
+            if(val) {
+                res.status(200).json(val);
+            } else {
+                console.log('Fetching from '+url);
+                axios.get(url)
+                    .then((response) => {
+                        console.log("Got response status "+response.status);
+                        cache.setex("forecasts/"+coordinates, config.cache_time, JSON.stringify(response.data)); // save cache for 15 mins.
+                        res.status(200).json(response.data);
+                        return;
+                    })
+                    .catch((error) => {
+                        console.log('Errors '+error);
+                    });
+            }
+        })
+        .catch(err => console.log(err));
+    
 });
 
 // Start the server
