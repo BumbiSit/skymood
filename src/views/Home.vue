@@ -34,8 +34,10 @@
           </b-col>
         </b-row>
         <b-row class="hourly-wrapper">
-          <h5>Hourly forecast</h5>
-          <vue-slider v-model="selectedHour" :width="'100%'" :marks="sliderMarks" :data="upcomingHours" :tooltip="'none'" @change="hourlyChanged"></vue-slider>
+          <b-col style="text-align:center;">
+            <h5>Hourly forecast</h5>
+          </b-col>
+          <vue-slider v-model="selectedHour" :width="'100%'" :marks="sliderMarks" :data="upcomingHours" :tooltip-formatter="formatAsTime" @change="hourlyChanged"></vue-slider>
         </b-row>
       </b-col>
     </b-row>
@@ -92,6 +94,7 @@ export default {
         }
       },
       sliderMarks: null,
+      formatAsTime: null,
       upcomingHours: [],
     };
   },
@@ -139,7 +142,7 @@ export default {
             if(val !== this.upcomingHours[0]){
               i += 1;
               return {
-                label: (i % 2 === 0 ? this.$moment(val*1000).tz(this.timezone).format('HH:mm') : ''),
+                label: (i % 3 === 0 ? this.$moment(val*1000).tz(this.timezone).format('HH:mm') : ''),
                 labelStyle: {
                   color: '#ddd',
                 },
@@ -154,6 +157,8 @@ export default {
               };
             }
           };
+          
+          this.formatAsTime = val => this.$moment(val*1000).tz(this.timezone).format('HH:mm');
 
           if (this.$route.params.coords !== undefined) {
             this.city = this.$route.params.address;
@@ -336,23 +341,35 @@ export default {
 .hourly-forecast {
   height: 300px;
 }
-.vue-slider-process {
-  background-color: white;
+.vue-slider{
+  .vue-slider-rail {
+    background-color: #cccccc66;
+    .vue-slider-process {
+      background-color: white;
+    }
+    .vue-slider-mark-step {
+      background-color: rgba(255, 255, 255, 0.5);
+    }
+    .vue-slider-mark-label {
+      transition: all 0.3s;
+    }
+    .vue-slider-dot-tooltip-inner {
+      background-color: #aaaaaaaa;
+    }
+    .vue-slider-dot-tooltip-inner-top{
+      &::after {
+        display: none;
+      }
+    }
+  }
 }
-.vue-slider-rail {
-  background-color: #cccccc66;
-}
-.vue-slider-mark-step {
-  background-color: rgba(255, 255, 255, 0.5);
-}
-.vue-slider-mark-label {
-  transition: all 0.3s;
-}
+
 .wind-pointer {
   transition: transform 0.5s ease-in-out;
 }
 .hourly-wrapper {
   padding-left: 20px;
   padding-right: 20px;
+  margin-top: 20px;
 }
 </style>
