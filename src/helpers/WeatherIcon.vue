@@ -5,26 +5,32 @@
 </template>
 <script>
 export default {
-    props: ['icon'],
+    props: ['icon', 'static'],
     computed: {
         getIcon() {
             switch (this.icon) {
                 case 'clear-day':
-                    return require('../assets/icons/day.svg');
+                    return (this.static ? require('../assets/icons/day_static.svg') : require('../assets/icons/day.svg'));
                 case 'clear-night':
-                    return require('../assets/icons/night.svg');
+                    return (this.static ? require('../assets/icons/night_static.svg') : require('../assets/icons/night.svg'));
                 case 'cloudy':
-                    return require('../assets/icons/cloudy.svg');
+                    return (this.static ? require('../assets/icons/cloudy_static.svg') : require('../assets/icons/cloudy.svg'));
                 case 'partly-cloudy-day':
-                    return require('../assets/icons/cloudy-day-1.svg');
+                    return (this.static ? require('../assets/icons/cloudy-day_static.svg') : require('../assets/icons/cloudy-day.svg'));
                 case 'partly-cloudy-night':
-                    return require('../assets/icons/cloudy-night-1.svg');
+                    return (this.static ? require('../assets/icons/cloudy-night_static.svg') : require('../assets/icons/cloudy-night.svg'));
                 case 'rain':
-                    return require('../assets/icons/rainy-5.svg');
+                    return (this.static ? require('../assets/icons/rainy_static.svg') : require('../assets/icons/rainy.svg'));
+                case 'snow':
+                    return (this.static ? require('../assets/icons/snowy_static.svg') : require('../assets/icons/snowy.svg'));
+                case 'sleet':
+                    return (this.static ? require('../assets/icons/sleet_static.svg') : require('../assets/icons/sleet.svg'));
+                case 'fog':
+                    return (this.static ? require('../assets/icons/cloudy_static.svg') : require('../assets/icons/cloudy.svg'));
                 case 'wind':
-                    return require('../assets/icons/rainy-6.svg');
+                    return (this.static ? require('../assets/icons/windy_static.svg') : require('../assets/icons/windy.svg'));
                 default:
-                    return require('../assets/icons/day.svg');
+                    return (this.static ? require('../assets/icons/day_static.svg') : require('../assets/icons/day.svg'));
             }
         },
     },
