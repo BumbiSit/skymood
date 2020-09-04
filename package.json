@@ -22,7 +22,7 @@
     "velocity-animate": "^1.5.2",
     "vue": "^2.6.10",
     "vue-awesome": "^3.5.1",
-    "vue-moment": "^4.0.0",
+    "vue-moment": "^4.1.0",
     "vue-router": "^3.0.1",
     "vue-slider-component": "^3.0.31",
     "vue2-google-maps": "^0.10.6",
