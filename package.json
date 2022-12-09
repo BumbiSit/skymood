@@ -14,7 +14,7 @@
     "bootstrap-vue": "^2.0.0-rc.18",
     "cors": "^2.8.5",
     "epic-spinners": "^1.1.0",
-    "express": "^4.16.4",
+    "express": "^4.17.3",
     "i": "^0.3.6",
     "moment-timezone": "^0.5.25",
     "npm": "^6.9.0",
